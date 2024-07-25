@@ -82,13 +82,11 @@ Then("click on edit button for edit the user info", () => {
 });
 
 Then("click on sort button and verify the user name", () => {
-
   cy.get('[class="oxd-table-header-sort"]').first().click();
   cy.get('[class="oxd-table-header-sort-dropdown-item"]').first().click();
   const accTextValues = [];
   cy.get('[class="oxd-table-body"] [class="oxd-table-card"]').then(($table) => {
     const tableLength = $table.length;
-
     for (let i = 1; i <= tableLength; i++) {
       cy.get(
         `.oxd-table-body .oxd-table-card:nth-child(${i}) div:nth-child(2) div`
@@ -101,8 +99,6 @@ Then("click on sort button and verify the user name", () => {
   });
   const accData = accTextValues.sort();
   if (accTextValues === accData) {
-    console.log('Acceding sort happened!')
-    
+    console.log('Acceding sort happened!') 
   }
-  
 });
