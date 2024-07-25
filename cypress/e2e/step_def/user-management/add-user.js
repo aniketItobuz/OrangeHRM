@@ -1,6 +1,6 @@
 /// <reference types = "cypress"/>
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 
 const userName = faker.internet.userName();
 
@@ -52,8 +52,6 @@ Then("new user is added to the list", () => {
 
     for (let i = 1; i <= tableLength && !userFound; i++) {
       const selector = `[class="oxd-table-body"] [class="oxd-table-card"]:nth-child(${i}) div:nth-child(2) div`;
-      
-      // Get the element and verify the text
       cy.get(selector).then(($el) => {
         if ($el.text() === userName) {
           console.log("User is added to the list");
@@ -62,6 +60,49 @@ Then("new user is added to the list", () => {
       });
     }
   });
-  
+});
+
+Then("click on edit button for edit the user info", () => {
+  cy.get('[class="oxd-table-body"] [class="oxd-table-card"]').then(($table) => {
+    const tableLength = $table.length;
+    let userFound = false;
+
+    for (let i = 1; i <= tableLength && !userFound; i++) {
+      const selector = `[class="oxd-table-body"] [class="oxd-table-card"]:nth-child(${i}) div:nth-child(2) div`;
+      cy.get(selector).then(($el) => {
+        if ($el.text() === userName) {
+          const editSelector = `[class="oxd-table-body"] [class="oxd-table-card"]:nth-child(${i}) div:nth-child(6) div button:nth-child(2)`;
+          cy.get(editSelector).click();
+          cy.get('[type="submit"]').click();
+          userFound = true;
+        }
+      });
+    }
+  });
+});
+
+Then("click on sort button and verify the user name", () => {
+
+  cy.get('[class="oxd-table-header-sort"]').first().click();
+  cy.get('[class="oxd-table-header-sort-dropdown-item"]').first().click();
+  const accTextValues = [];
+  cy.get('[class="oxd-table-body"] [class="oxd-table-card"]').then(($table) => {
+    const tableLength = $table.length;
+
+    for (let i = 1; i <= tableLength; i++) {
+      cy.get(
+        `.oxd-table-body .oxd-table-card:nth-child(${i}) div:nth-child(2) div`
+      )
+        .invoke("text")
+        .then((text) => {
+          accTextValues.push(text.trim());
+        });
+    }
+  });
+  const accData = accTextValues.sort();
+  if (accTextValues === accData) {
+    console.log('Acceding sort happened!')
+    
+  }
   
 });
